@@ -1,7 +1,7 @@
 // Wedding Photo Gallery - Gallery JavaScript
 // Handles fetching and displaying uploaded images
 
-const UPLOADCARE_PUBLIC_KEY = '09433680de3afcc5ee82'; // Replace with your Uploadcare public key
+const UPLOADCARE_PUBLIC_KEY = config.UPLOADCARE_PUBLIC_KEY;
 const GALLERY_CONTAINER = document.querySelector('.gallery-grid');
 const LOADING_ELEMENT = document.querySelector('.loading');
 
@@ -11,6 +11,8 @@ async function fetchImages() {
         // Show loading state
         LOADING_ELEMENT.style.display = 'flex';
 
+        console.log('Using Uploadcare key:', UPLOADCARE_PUBLIC_KEY); // Debug log
+
         // Get the list of files from Uploadcare
         const response = await fetch('https://api.uploadcare.com/files/', {
             headers: {
@@ -19,10 +21,13 @@ async function fetchImages() {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch images');
+            const errorText = await response.text();
+            console.error('API Error:', response.status, errorText);
+            throw new Error(`Failed to fetch images: ${response.status} ${errorText}`);
         }
 
         const data = await response.json();
+        console.log('API Response:', data); // Debug log
 
         // Filter for image files and sort by upload date (newest first)
         const images = data.results
@@ -33,7 +38,7 @@ async function fetchImages() {
         displayImages(images);
     } catch (error) {
         console.error('Error fetching images:', error);
-        showError('Failed to load images. Please try again later.');
+        showError(`Failed to load images: ${error.message}`);
     } finally {
         // Hide loading state
         LOADING_ELEMENT.style.display = 'none';
