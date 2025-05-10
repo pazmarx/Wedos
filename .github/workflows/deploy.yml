@@ -27,9 +27,15 @@ jobs:
         env:
           UPLOADCARE_KEY: ${{ secrets.UPLOADCARE_PUBLIC_KEY }}
         run: |
+          if [ -z "$UPLOADCARE_KEY" ]; then
+            echo "Error: UPLOADCARE_KEY is empty"
+            exit 1
+          fi
           echo "Secret length: ${#UPLOADCARE_KEY}"
+          # Escape any special characters in the key
+          ESCAPED_KEY=$(echo "$UPLOADCARE_KEY" | sed 's/[\/&]/\\&/g')
           echo "const config = {
-            UPLOADCARE_PUBLIC_KEY: '$UPLOADCARE_KEY'
+            UPLOADCARE_PUBLIC_KEY: \"$ESCAPED_KEY\"
           };" > config.prod.js
           echo "Config file created with key length: $(wc -l < config.prod.js)"
 
@@ -37,6 +43,8 @@ jobs:
         run: |
           echo "Config file contents (first line only):"
           head -n 1 config.prod.js
+          echo "Checking if key starts with 'public-':"
+          grep -q "public-" config.prod.js && echo "Key format looks correct" || echo "Warning: Key might not be in correct format"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
