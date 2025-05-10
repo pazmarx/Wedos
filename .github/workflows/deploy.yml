@@ -24,9 +24,11 @@ jobs:
           node-version: '18'
 
       - name: Create config file
+        env:
+          UPLOADCARE_KEY: ${{ secrets.UPLOADCARE_PUBLIC_KEY }}
         run: |
           echo "const config = {
-            UPLOADCARE_PUBLIC_KEY: '${{ secrets.UPLOADCARE_PUBLIC_KEY }}'
+            UPLOADCARE_PUBLIC_KEY: '$UPLOADCARE_KEY'
           };" > config.prod.js
 
       - name: Deploy to GitHub Pages
