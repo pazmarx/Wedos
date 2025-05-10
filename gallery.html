@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Photo Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Load configuration -->
+    <script src="config.prod.js"></script>
+    <style>
+        /* Additional styles for lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #721c24;
+            background-color: #f8d7da;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state h2 {
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Upload Photos</a>
+            <a href="gallery.html" class="nav-link">View Gallery</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1>Wedding Photo Gallery</h1>
+        <div class="loading"></div>
+        <div class="gallery-grid"></div>
+    </main>
+
+    <script src="js/gallery.js"></script>
+</body>
+
+</html>
