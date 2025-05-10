@@ -27,9 +27,16 @@ jobs:
         env:
           UPLOADCARE_KEY: ${{ secrets.UPLOADCARE_PUBLIC_KEY }}
         run: |
+          echo "Secret length: ${#UPLOADCARE_KEY}"
           echo "const config = {
             UPLOADCARE_PUBLIC_KEY: '$UPLOADCARE_KEY'
           };" > config.prod.js
+          echo "Config file created with key length: $(wc -l < config.prod.js)"
+
+      - name: Verify config file
+        run: |
+          echo "Config file contents (first line only):"
+          head -n 1 config.prod.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
