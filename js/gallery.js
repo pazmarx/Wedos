@@ -11,11 +11,12 @@ async function fetchImages() {
         // Show loading state
         LOADING_ELEMENT.style.display = 'flex';
 
-        console.log('Using Uploadcare key:', UPLOADCARE_PUBLIC_KEY); // Debug log
+        console.log('Using Uploadcare key:', UPLOADCARE_PUBLIC_KEY);
 
-        // Get the list of files from Uploadcare
-        const response = await fetch('https://api.uploadcare.com/files/', {
+        // Get the list of files from Uploadcare using the CDN API
+        const response = await fetch(`https://api.uploadcare.com/files/?limit=100&ordering=-datetime_uploaded`, {
             headers: {
+                'Accept': 'application/vnd.uploadcare-v0.7+json',
                 'Authorization': `Uploadcare.Simple ${UPLOADCARE_PUBLIC_KEY}:`
             }
         });
@@ -27,12 +28,17 @@ async function fetchImages() {
         }
 
         const data = await response.json();
-        console.log('API Response:', data); // Debug log
+        console.log('API Response:', data);
 
         // Filter for image files and sort by upload date (newest first)
         const images = data.results
-            .filter(file => file.mime_type.startsWith('image/'))
+            .filter(file => file.mime_type && file.mime_type.startsWith('image/'))
             .sort((a, b) => new Date(b.datetime_uploaded) - new Date(a.datetime_uploaded));
+
+        if (images.length === 0) {
+            showEmptyState();
+            return;
+        }
 
         // Display images
         displayImages(images);
@@ -50,13 +56,9 @@ function displayImages(images) {
     // Clear existing content
     GALLERY_CONTAINER.innerHTML = '';
 
-    if (images.length === 0) {
-        showEmptyState();
-        return;
-    }
-
     // Create and append image elements
     images.forEach(image => {
+        // Use the CDN URL format
         const imageUrl = `https://ucarecdn.com/${image.uuid}/-/preview/-/quality/lightest/`;
         const imageElement = createImageElement(imageUrl, image.original_filename);
         GALLERY_CONTAINER.appendChild(imageElement);

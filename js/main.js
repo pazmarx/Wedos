@@ -1,9 +1,6 @@
 // Wedding Photo Gallery - Main JavaScript
 // Handles file uploads and camera capture functionality
 
-// Uploadcare configuration
-const UPLOADCARE_PUBLIC_KEY = '09433680de3afcc5ee82'; // Replace with your Uploadcare public key
-
 // Initialize Uploadcare widget for device uploads
 const uploadWidget = uploadcare.Widget('[role=uploadcare-uploader]', {
     publicKey: UPLOADCARE_PUBLIC_KEY,
